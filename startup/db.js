@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const config = require('config')
 
 module.exports = function(){
-    mongoose.connect("mongodb://127.0.0.1/todo")
+    mongoose.connect(config.get('dbConnectURL'))
         .then(()=>{
             console.log('DB connection is succsess');
         })
