@@ -45,7 +45,8 @@ async function postUser(req, res) {
         const hashPass = await bcrypt.hash(req.body.password,salt);
         user.password = hashPass;
         await user.save();
-        res.send(_.pick(user,['_id','name','email']));
+        const token = user.generateAuthToken();
+        res.header("x-auth-token", token).send(_.pick(user,['_id','name','email']));
     }
     catch(error){
         res.status(500).json({ error: `ma'lumot olishda xatolik: ${error}` });

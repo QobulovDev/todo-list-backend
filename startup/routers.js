@@ -1,4 +1,10 @@
 const express = require("express");
+const cors = require('cors');
+const fs = require('fs')
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../swagger.json');
+const customCss = fs.readFileSync((process.cwd()+"/public/assets/swagger.css"), 'utf8');
+
 const todo = require("../routes/todo");
 const user = require('../routes/user');
 const category = require('../routes/category');
@@ -10,11 +16,12 @@ module.exports = function(app) {
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(express.static('public'));
-
+  app.use(cors());
   //run engine
   // app.set("view engine", "ejs");
-
+  
   // routes
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {customCss}));
   app.use("/api/todo", todo);
   app.use("/api/user", user);
   app.use("/api/auth", auth);

@@ -4,7 +4,7 @@ const auth = require('../middleware/auth');
 const { user, admin } = require('../middleware/role');
 
 // get all users
-router.get('/', auth, userController.getAllUsers);
+router.get('/', auth, admin, userController.getAllUsers);
 
 //get user with id
 router.get('/:id', auth, userController.getUser);
