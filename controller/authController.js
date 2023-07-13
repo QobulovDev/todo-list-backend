@@ -13,7 +13,8 @@ async function postUser(req, res) {
         if(!isValidPwd)
             return res.status(400).send("Email yok parol xato");
         const token = user.generateAuthToken();
-        res.header("x-auth-token", token).send(true);
+        // res.header("x-auth-token", token).send(true);
+        res.json({authToken: token, _id: user._id, name: user.name})
     }
     catch(error){
         res.status(500).json({ error: `Failed to fetch user: ${error}` });

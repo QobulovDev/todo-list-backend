@@ -6,7 +6,7 @@ const categoryController = require('./categoryController');
 
 async function getAllTodos(req, res) {
   try {
-    const userId = req.body.userId;
+    const userId = req.params.userId;
     if(!userId) 
       return res.status(401).json({"error": "userId is required"});
     if(!objectId.isValid(userId)) 

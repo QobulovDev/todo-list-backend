@@ -46,7 +46,8 @@ async function postUser(req, res) {
         user.password = hashPass;
         await user.save();
         const token = user.generateAuthToken();
-        res.header("x-auth-token", token).send(_.pick(user,['_id','name','email']));
+        res.json({authToken: token, _id: user._id, name: user.name})
+        // res.header("x-auth-token", token).send(_.pick(user,['_id','name','email']));
     }
     catch(error){
         res.status(500).json({ error: `ma'lumot olishda xatolik: ${error}` });

@@ -18,14 +18,15 @@ const TodoSchema = new mongoose.Schema({
         type: Date
     }, 
     subitem: {
-        title: {
-            type: String,
-            maxlength: 100
-        },
-        subItemStatus:{
-            typr: String,
-            enum: ['complate', 'todo', 'fail']
-        }
+        type: String,
+        // title: {
+        //     type: String,
+        //     maxlength: 100
+        // },
+        // subItemStatus:{
+        //     typr: String,
+        //     enum: ['complate', 'todo', 'fail']
+        // }
     }, 
     dateCreated: {
         type: Date,
@@ -49,12 +50,10 @@ const todoValidate = (todo)=>{
         name: Joi.string().required().min(3).max(100),
         status: Joi.string().required(),
         dateCreated: Joi.date().default(new Date()),
-        subitem: Joi.object({
-            title: Joi.string().max(100),
-            subItemStatus: Joi.string()
-        }),
+        subitem: Joi.string(),
         categoryId: Joi.string().required(),
-        userId: Joi.string().required()
+        userId: Joi.string().required(),
+        didline: Joi.date()
     });
     return todoValidateSchema.validate(todo);
 }
