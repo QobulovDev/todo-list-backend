@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const objectId = require('mongoose').Types.ObjectId;
 
 module.exports = function auth(req,res,next){
     const token = req.header('x-auth-token');
@@ -16,6 +17,7 @@ module.exports = function auth(req,res,next){
         next();
     }
     catch(err){
+        console.log(err);
         return res.status(400).send('Yokin yaroqsiz');
     }
 }

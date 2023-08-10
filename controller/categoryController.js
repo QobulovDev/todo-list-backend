@@ -8,6 +8,7 @@ const getCategories = async (userId) =>{
     const categories = await Category.find({"_id" : { "$in" : categoryIds} });
     return categories;
 } 
+
 async function getCategory(req, res){
     try {
         const userId = req.user._id;

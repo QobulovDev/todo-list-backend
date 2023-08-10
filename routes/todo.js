@@ -4,7 +4,7 @@ const todoController = require('../controller/todoController');
 const auth = require("../middleware/auth");
 
 //get all todos
-router.get('/:userId', auth, todoController.getAllTodos);
+router.get('/', auth, todoController.getAllTodos);
 
 //get a todo with id
 router.post("/", auth, todoController.addTodo);
