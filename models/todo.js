@@ -50,13 +50,20 @@ const todoValidate = (todo)=>{
         name: Joi.string().required().min(3).max(100),
         status: Joi.string().required(),
         dateCreated: Joi.date().default(new Date()),
-        subitem: Joi.string(),
         categoryId: Joi.string().required(),
         userId: Joi.string().required(),
-        didline: Joi.date()
+    });
+    return todoValidateSchema.validate(todo);
+}
+
+const editTodoValidate = (todo)=>{
+    const todoValidateSchema = Joi.object({
+        name: Joi.string().required().min(3).max(100),
+        status: Joi.string().required()
     });
     return todoValidateSchema.validate(todo);
 }
 
 module.exports.todoValidate = todoValidate;
+module.exports.editTodoValidate = editTodoValidate;
 module.exports.Todo = Todo;

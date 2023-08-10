@@ -1,4 +1,4 @@
-const { Todo, todoValidate } = require("../models/todo");
+const { Todo, todoValidate, editTodoValidate } = require("../models/todo");
 const { User } = require('../models/user');
 const { Category } = require('../models/category');
 const objectId = require('mongoose').Types.ObjectId;
@@ -57,7 +57,7 @@ async function addTodo(req, res){
 
 async function editTodo(req, res){
   try{
-    const {error} = todoValidate(req.body);
+    const {error} = editTodoValidate(req.body);
     if(error)
       return res.status(400).send(error.details[0].message);
     const userId = await User.findById(req.user._id);
