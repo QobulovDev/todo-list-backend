@@ -10,11 +10,7 @@ const getCategories = async (userId) =>{
 } 
 async function getCategory(req, res){
     try {
-        const userId = req.body.userId;
-        if(!userId) 
-            return res.status(401).send('userId is required');
-        if(!objectId.isValid(userId)) 
-            return res.status(401).json({"error": "userId must be of type objectId"});
+        const userId = req.user._id;
         const categories = await getCategories(userId)
         res.send(categories);
     } catch (error) {
@@ -27,8 +23,7 @@ async function addCategory(req, res){
         const {error} = categoryValidate(req.body);
         if(error)
             return res.status(401).send(error.details[0].message);
-        if(!objectId.isValid(req.body.userId)) 
-            return res.status(401).json({"error": "userId must be of type objectId"});
+        const userId = req.user._id;
         let category = await Category.findOne({name: req.body.name});
         if(!category){
             category = new Category({
@@ -37,10 +32,10 @@ async function addCategory(req, res){
             });
             category = await category.save();
         }
-        let usersHasCategory = await UsersHasCategory.findOne({userId: req.body.userId, categoryId: category._id});
+        let usersHasCategory = await UsersHasCategory.findOne({userId: userId, categoryId: category._id});
         if(!usersHasCategory){
             usersHasCategory = new UsersHasCategory({
-                userId: req.body.userId,
+                userId: userId,
                 categoryId: category._id
             });
             await usersHasCategory.save()
@@ -54,6 +49,7 @@ async function addCategory(req, res){
 
 async function updateCategory(req, res){
     try{
+        const userId = req.user._id;
         if(!objectId.isValid(req.params.id)) 
             return res.status(401).json({"error": "id objectId turida bo'lishi kerak"});
         let category = await Category.findById(req.params.id);
@@ -64,7 +60,7 @@ async function updateCategory(req, res){
             return res.status(401).send(error.details[0].message);
         //get req.user id no equel in db userId
         let usersHasCategory = await UsersHasCategory
-            .find({categoryId: category._id, userId: {$ne: req.body.userId}});
+            .find({categoryId: category._id, userId: {$ne: userId}});
         console.log(usersHasCategory)
         if(usersHasCategory.length!==0){
             return res.status(400).send("Berilga id'li category o'zgartirib bo'lmaydi")
@@ -81,19 +77,20 @@ async function updateCategory(req, res){
 
 async function deleteCategory(req, res){
     try{
+        const userId = req.user._id;
         if(!objectId.isValid(req.params.id)) 
             return res.status(401).json({"error": "id objectId turida bo'lishi kerak"});
         let category = await Category.findById(req.params.id)
         if(!category)
             return res.status(404).send("Berilgan id'li category yo'q")
         let usersHasCategory = await UsersHasCategory
-            .find({categoryId: category._id, userId: {$ne: req.body.userId}});
+            .find({categoryId: category._id, userId: {$ne: userId}});
         if(usersHasCategory){
             usersHasCategory = await UsersHasCategory
-                .deleteOne({categoryId: category._id, userId: req.body.userId})
+                .deleteOne({categoryId: category._id, userId: userId})
         }else{
             usersHasCategory = await UsersHasCategory
-                .deleteOne({categoryId: category._id, userId: req.body.userId});
+                .deleteOne({categoryId: category._id, userId: userId});
             category = await Category.findByIdAndDelete(req.params.id)
         }
         res.send(category)

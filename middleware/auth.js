@@ -6,8 +6,13 @@ module.exports = function auth(req,res,next){
     if(!token)
         return res.status(401).send("Token yuq");
     try{
-        const decoded = jwt.verify(token,config.get('jwtAuthToken'));
+        const decoded = jwt.verify(token, config.get('jwtAuthToken'));
+        if(!decoded._id) 
+            return res.status(401).json({"error": "userId is required"});
+        if(!objectId.isValid(decoded._id)) 
+            return res.status(401).json({"error": "userId must be of type objectId"});
         req.user = decoded;
+
         next();
     }
     catch(err){

@@ -6,11 +6,7 @@ const categoryController = require('./categoryController');
 
 async function getAllTodos(req, res) {
   try {
-    const userId = req.params.userId;
-    if(!userId) 
-      return res.status(401).json({"error": "userId is required"});
-    if(!objectId.isValid(userId)) 
-      return res.status(401).json({"error": "userId must be of type objectId"});
+    const userId = req.user._id;
     const categories = await categoryController.getCategories(userId)
     var categoryIds = categories.map(category => category._id);
 
@@ -38,7 +34,7 @@ async function addTodo(req, res){
     const {error} = todoValidate(req.body);
     if(error)
       return res.status(400).send(error.details[0].message);
-    const userId = await User.findById(req.body.userId);
+    const userId = await User.findById(req.user._id);
     if(!userId)
       return res.status(401).send("userId topilmadi");
     const categoryId = await Category.findById(req.body.categoryId);
@@ -64,7 +60,7 @@ async function editTodo(req, res){
     const {error} = todoValidate(req.body);
     if(error)
       return res.status(400).send(error.details[0].message);
-    const userId = await User.findById(req.body.userId);
+    const userId = await User.findById(req.user._id);
     if(!userId)
       return res.status(401).send("userId topilmadi");
     const categoryId = await Category.findById(req.body.categoryId);
