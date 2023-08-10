@@ -17,7 +17,6 @@ module.exports = function auth(req,res,next){
         next();
     }
     catch(err){
-        console.log(err);
         return res.status(400).send('Yokin yaroqsiz');
     }
 }

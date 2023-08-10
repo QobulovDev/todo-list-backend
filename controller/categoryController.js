@@ -62,8 +62,7 @@ async function updateCategory(req, res){
         //get req.user id no equel in db userId
         let usersHasCategory = await UsersHasCategory
             .find({categoryId: category._id, userId: {$ne: userId}});
-        console.log(usersHasCategory)
-        if(usersHasCategory.length!==0){
+        if(usersHasCategory.length!==1){
             return res.status(400).send("Berilga id'li category o'zgartirib bo'lmaydi")
         }
         category = await Category.findByIdAndUpdate(req.params.id, {
